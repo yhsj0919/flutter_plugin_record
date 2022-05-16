@@ -2,7 +2,6 @@ package record.wilson.flutter.com.flutter_plugin_record
 
 import android.Manifest
 import android.app.Activity
-import android.content.Context
 import android.content.pm.PackageManager
 import android.util.Log
 import android.widget.Toast
@@ -21,7 +20,6 @@ import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugin.common.PluginRegistry
-import io.flutter.plugin.common.PluginRegistry.Registrar
 import record.wilson.flutter.com.flutter_plugin_record.utils.*
 import java.io.File
 import java.util.*
@@ -42,13 +40,6 @@ class FlutterPluginRecordPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
     lateinit var activity:Activity
 
     companion object {
-        //support embedding v1
-        @JvmStatic
-        fun registerWith(registrar: Registrar) {
-            val plugin = initPlugin(registrar.messenger())
-            plugin.activity=registrar.activity()
-            registrar.addRequestPermissionsResultListener(plugin)
-        }
 
         private fun initPlugin(binaryMessenger: BinaryMessenger):FlutterPluginRecordPlugin {
             val channel = createMethodChannel(binaryMessenger)
@@ -462,9 +453,9 @@ class FlutterPluginRecordPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
 
 
     // 权限监听回调
-    override fun onRequestPermissionsResult(p0: Int, p1: Array<out String>?, p2: IntArray?): Boolean {
+    override fun onRequestPermissionsResult(p0: Int, p1: Array<out String>, p2: IntArray): Boolean {
         if (p0 == 1) {
-            if (p2?.get(0) == PackageManager.PERMISSION_GRANTED) {
+            if (p2[0] == PackageManager.PERMISSION_GRANTED) {
 //                initRecord()
                 return true
             } else {
@@ -478,6 +469,5 @@ class FlutterPluginRecordPlugin : FlutterPlugin, MethodCallHandler, ActivityAwar
         return false
     }
 
-    
 
 }
